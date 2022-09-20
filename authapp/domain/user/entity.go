@@ -11,6 +11,13 @@ const (
 	RoleUser  Role = "USER"
 )
 
+func GetAllRoles() map[Role]bool {
+	return map[Role]bool{
+		RoleAdmin: true,
+		RoleUser:  true,
+	}
+}
+
 type User struct {
 	ID          int
 	Phonenumber string
