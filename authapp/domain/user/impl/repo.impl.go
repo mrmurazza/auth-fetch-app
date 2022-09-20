@@ -47,12 +47,12 @@ func (r *repo) GetUserByUserPass(phonenumber, password string) (*user.User, erro
 func (r *repo) GetUserByPhonenumber(phonenumber string) (*user.User, error) {
 	u := user.User{}
 	err := r.db.Model(user.User{}).Where("phonenumber = ?", phonenumber).First(&u).Error
-	if err != nil {
-		return nil, err
-	}
-
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
 	}
 
 	return &u, nil

@@ -3,7 +3,6 @@ package handler
 import (
 	"authapp/domain/user"
 	"authapp/dto/request"
-	"authapp/dto/response"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -63,13 +62,14 @@ func (h *ApiHandler) CreateUser(c *gin.Context) {
 
 	u, err := h.userSvc.CreateUserIfNotAny(req)
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
 		return
 	}
 
-	resp := response.FromUserToResponse(u)
 	c.JSON(http.StatusOK, gin.H{
-		"data":    resp,
+		"data": gin.H{
+			"password": u.Password,
+		},
 		"message": "success",
 	})
 }

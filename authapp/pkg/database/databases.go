@@ -30,16 +30,16 @@ func InitDatabase() {
 	DB.SingularTable(false)
 
 	err = DB.Exec("CREATE TABLE IF NOT EXISTS users (" +
-		"`id` bigint(20) NOT NULL AUTO_INCREMENT, " +
-		"phonenumber varchar(13) not null, " +
-		"name varchar(50) not null, " +
-		"password varchar(50) not null, " +
+		"`id` integer NOT NULL primary key, " +
+		"phonenumber varchar(13) not null default ``, " +
+		"name varchar(50) not null default ``, " +
+		"password varchar(50) not null default ``, " +
 		"role varchar(50) not null, " +
 		"created_at datetime not null default current_timestamp, " +
 		"updated_at datetime not null default current_timestamp, " +
-		"deleted_at datetime default null," +
-		"PRIMARY KEY (`id`)" +
+		"deleted_at datetime default null" +
 		")").Error
+
 	if err != nil {
 		panic(err)
 	}

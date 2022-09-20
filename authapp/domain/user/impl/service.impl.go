@@ -37,13 +37,13 @@ func (s *service) CreateUserIfNotAny(req request.CreateUserRequest) (*user.User,
 		Phonenumber: req.Phonenumber,
 		Name:        req.Name,
 		// TODO Generate Password
-		Password: "",
+		Password: "1234",
 		Role:     role,
 	}
 
 	existingUser, err := s.repo.GetUserByPhonenumber(req.Phonenumber)
 	if existingUser != nil {
-		return existingUser, nil
+		return nil, errors.New("user with this phonenumber already exist")
 	}
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (s *service) Login(phonenumber, password string) (*user.User, string, error
 	}
 
 	// TODO Generate Token
-	token := ""
+	token := "123456"
 
 	return u, token, nil
 }
