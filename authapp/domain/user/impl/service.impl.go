@@ -3,6 +3,7 @@ package impl
 import (
 	"authapp/domain/user"
 	"authapp/dto/request"
+	"authapp/pkg/auth"
 	"errors"
 )
 
@@ -33,12 +34,12 @@ func (s *service) CreateUserIfNotAny(req request.CreateUserRequest) (*user.User,
 		return nil, err
 	}
 
+	password := auth.GeneratePassword(4)
 	u := &user.User{
 		Phonenumber: req.Phonenumber,
 		Name:        req.Name,
-		// TODO Generate Password
-		Password: "1234",
-		Role:     role,
+		Password:    auth.EncryptPassword(password),
+		Role:        role,
 	}
 
 	existingUser, err := s.repo.GetUserByPhonenumber(req.Phonenumber)
@@ -54,12 +55,15 @@ func (s *service) CreateUserIfNotAny(req request.CreateUserRequest) (*user.User,
 		return nil, err
 	}
 
+	// overwrite encrypted password for response purposes
+	u.Password = password
+
 	return u, nil
 }
 
 func (s *service) Login(phonenumber, password string) (*user.User, string, error) {
 
-	u, err := s.repo.GetUserByUserPass(phonenumber, password)
+	u, err := s.repo.GetUserByUserPass(phonenumber, auth.EncryptPassword(password))
 	if u == nil {
 		return nil, "", nil
 	}
