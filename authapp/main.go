@@ -3,6 +3,7 @@ package main
 import (
 	userImpl "authapp/domain/user/impl"
 	"authapp/handler"
+	"authapp/pkg/auth"
 	"authapp/pkg/database"
 
 	"log"
@@ -27,6 +28,9 @@ func main() {
 	{
 		v1.POST("/login", apiHandler.Login)
 		v1.POST("/user", apiHandler.CreateUser)
+
+		authorized := v1.Group("", auth.AuthenticateMiddleware())
+		authorized.GET("/check-auth", apiHandler.CheckAuth)
 	}
 
 	r.GET("/ping", func(c *gin.Context) {

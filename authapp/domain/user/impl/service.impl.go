@@ -4,6 +4,7 @@ import (
 	"authapp/domain/user"
 	"authapp/dto/request"
 	"authapp/pkg/auth"
+
 	"errors"
 )
 
@@ -71,8 +72,16 @@ func (s *service) Login(phonenumber, password string) (*user.User, string, error
 		return nil, "", err
 	}
 
-	// TODO Generate Token
-	token := "123456"
+	claims := map[string]interface{}{
+		"phonenumber": u.Phonenumber,
+		"name":        u.Name,
+		"role":        u.Role,
+		"timestamp":   u.CreatedAt.UTC().Unix(),
+	}
+	token, err := auth.TokenizeData(claims)
+	if err != nil {
+		return nil, "", err
+	}
 
 	return u, token, nil
 }

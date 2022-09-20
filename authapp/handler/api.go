@@ -44,6 +44,16 @@ func (h *ApiHandler) Login(c *gin.Context) {
 }
 
 func (h *ApiHandler) CheckAuth(c *gin.Context) {
+	userInfo, ok := c.Get("userInfo")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "userinfo not filled"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data":    userInfo,
+		"message": "success",
+	})
 }
 
 func (h *ApiHandler) CreateUser(c *gin.Context) {

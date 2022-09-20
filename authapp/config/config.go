@@ -2,6 +2,7 @@ package config
 
 import (
 	"sync"
+	"time"
 
 	"github.com/kelseyhightower/envconfig"
 )
@@ -12,6 +13,11 @@ var (
 )
 
 type Config struct {
+	ApplicationName string `envconfig:"APP_NAME" default:"authapp"`
+
+	JWTExpiryDuration time.Duration `envconfig:"JWT_EXPIRY" default:"1h"`
+	JWTSignatureKey   string        `envconfig:"JWT_SIGN_KEY" default:"this is a secret"`
+
 	DBHost     string `envconfig:"DB_HOST" default:"authapp.db"`
 	DBDriver   string `envconfig:"DB_DRIVER" default:"sqlite3"`
 	DBUser     string `envconfig:"DB_USER" default:""`
