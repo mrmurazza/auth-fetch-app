@@ -1,10 +1,10 @@
 const http = require("axios");
 
-const debug = process.env.CURRENCY_API_DEBUG || true;
+const debug = (process.env.CURRENCY_API_DEBUG || "true") === "true";
 
 function getCurrencyConversion(amount, from, to) {
     if (debug) {
-        return Promise.resolve(0.000066571);
+        return Promise.resolve(1);
     }
 
     return http

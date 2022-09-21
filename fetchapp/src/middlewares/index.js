@@ -10,8 +10,7 @@ function errorHandler(err, req, res, next) {
         message: err.message,
     };
 
-    const debug = process.env.DEBUG_MODE === "true";
-    console.log(`debug mode ${debug}`);
+    const debug = (process.env.DEBUG_MODE || "false") === "true";
     if (debug) {
         result.stack = err.stack;
     }
