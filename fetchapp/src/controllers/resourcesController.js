@@ -1,16 +1,15 @@
 const express = require("express");
-const getCommodities = require("../clients/commodities");
-const getCurrencyConversion = require("../clients/currency");
-const getResources = require("../services/resourcesService");
+const {
+    getResources,
+    aggregateResources,
+} = require("../services/resourcesService");
 
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
     try {
-        const data2 = await getResources();
-        // const data3 = await getCurrencyConversion(1, "IDR", "USD");
-        // const data = ["test", "test2"];
-        res.json(data2);
+        const data = await getResources();
+        res.json(data);
     } catch (error) {
         next(error);
     }
@@ -18,9 +17,10 @@ router.get("/", async (req, res, next) => {
 
 router.get("/aggregate", async (req, res, next) => {
     try {
-        const data2 = await getCommodities();
-        const data = ["test", "test2"];
-        res.json(data2);
+        const data = await aggregateResources();
+        res.json({
+            data: data,
+        });
     } catch (error) {
         next(error);
     }
