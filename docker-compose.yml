@@ -1,0 +1,32 @@
+version: '3'
+services:
+  authapp:
+    container_name: authapp
+    build: ./authapp
+    ports:
+      - 8080:8080
+    restart: on-failure
+    volumes:
+      - auth:/usr/src/app/
+    networks:
+      - fullstack
+
+
+  fetchapp:
+    container_name: fetchapp
+    build: ./fetchapp
+    ports:
+      - 5000:5000
+    volumes:
+      - fetch:/usr/src/app/
+    networks:
+      - fullstack
+
+volumes:
+  auth:
+  fetch:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  fullstack:
+    driver: bridge
