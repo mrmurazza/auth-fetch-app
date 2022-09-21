@@ -1,6 +1,12 @@
 const http = require("axios");
 
+const debug = true;
+
 function getCurrencyConversion(amount, from, to) {
+    if (debug) {
+        return Promise.resolve(0.000066571);
+    }
+
     return http
         .get(
             `https://api.apilayer.com/currency_data/convert?to=${to}&from=${from}&amount=${amount}`,

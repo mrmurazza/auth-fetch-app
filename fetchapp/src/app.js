@@ -14,7 +14,9 @@ app.use(bodyParser.json());
 const { notFound, errorHandler } = require("./middlewares");
 const resources = require("./controllers/resourcesController");
 const { initCache } = require("./services/currencyService");
+const {authenticate} = require("./middlewares/jwt-auth");
 
+app.use(authenticate);
 app.use("/api/v1/resources", resources);
 
 app.use(notFound);

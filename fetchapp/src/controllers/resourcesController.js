@@ -1,4 +1,5 @@
 const express = require("express");
+const { authenticateAdmin } = require("../middlewares/jwt-auth");
 const {
     getResources,
     aggregateResources,
@@ -15,6 +16,7 @@ router.get("/", async (req, res, next) => {
     }
 });
 
+router.use("/aggregate", authenticateAdmin);
 router.get("/aggregate", async (req, res, next) => {
     try {
         const data = await aggregateResources();
