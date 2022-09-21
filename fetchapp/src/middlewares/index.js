@@ -6,10 +6,17 @@ function notFound(req, res, next) {
 
 function errorHandler(err, req, res, next) {
     res.status(res.statusCode || 500);
-    res.json({
+    var result = {
         message: err.message,
-        stack: err.stack,
-    });
+    };
+
+    const debug = process.env.DEBUG_MODE === "true";
+    console.log(`debug mode ${debug}`);
+    if (debug) {
+        result.stack = err.stack;
+    }
+
+    res.json(result);
 }
 
 module.exports = {
