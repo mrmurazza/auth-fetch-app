@@ -11,6 +11,8 @@ services:
       - auth:/usr/src/app/
     networks:
       - fullstack
+    env_file:
+      - ./authapp/.env
 
 
   fetchapp:
