@@ -1,6 +1,6 @@
 const http = require("axios");
 
-const debug = true;
+const debug = process.env.CURRENCY_API_DEBUG || true;
 
 function getCurrencyConversion(amount, from, to) {
     if (debug) {
@@ -12,7 +12,7 @@ function getCurrencyConversion(amount, from, to) {
             `https://api.apilayer.com/currency_data/convert?to=${to}&from=${from}&amount=${amount}`,
             {
                 headers: {
-                    apikey: "EdpCarnBHwXo8kSFutq7DOV6dEvBzlfq",
+                    apikey: process.env.CURRENCY_API_KEY || "",
                 },
             }
         )
