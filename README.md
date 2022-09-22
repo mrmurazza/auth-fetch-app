@@ -9,10 +9,10 @@
 6. `authapp` will by default use port `8080` and `fetchapp` will use port `5000`. You need to update the port in docker-compose.yml to change it.
 
 # Context Model
-![c4-context](c4-model/auth-fetch-app-c4model-context.jpeg)
+![c4-context](c4-model/auth-fetch-app-c4model-context.png)
 
 # Container Model
-![c4-container](c4-model/auth-fetch-app-c4model-container.jpeg)
+![c4-container](c4-model/auth-fetch-app-c4model-container.png)
 
 # Project Structure
 
@@ -65,7 +65,7 @@ Below some screenshot of the Postman
 ![login](postman/screenshot/login-user[ADMIN].png)
 
 ### Create User - Admin
-![create-user[admin]](postman/screenshot/createuser[ADMIN].png)
+![create-user[admin]](postman/screenshot/create-user[ADMIN].png)
 
 ### Check Auth
 ![check-auth](postman/screenshot/check-auth[ADMIN].png)
