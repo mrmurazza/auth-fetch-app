@@ -80,3 +80,5 @@ Below some screenshot of the Postman
 ### Aggregate Resource by User
 ![aggregate-res-user](postman/screenshot/aggregate-resource[USER].png)
 
+# Video Demo
+Video demo of this app can be accessed in this link https://drive.google.com/file/d/1htWzFSavI5_ZLd4T5LyEkuqdZeN6vKxG/view?usp=sharing
