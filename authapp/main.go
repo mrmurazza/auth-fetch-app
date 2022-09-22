@@ -15,8 +15,9 @@ func main() {
 	database.InitDatabase()
 
 	// init service & repo
+	authSvc := auth.InitAuthService()
 	itemRepo := userImpl.NewRepo(database.DB)
-	itemSvc := userImpl.NewService(itemRepo)
+	itemSvc := userImpl.NewService(itemRepo, authSvc)
 
 	// init handler
 	apiHandler := handler.NewApiHandler(itemSvc)
@@ -26,7 +27,7 @@ func main() {
 		v1.POST("/login", apiHandler.Login)
 		v1.POST("/user", apiHandler.CreateUser)
 
-		authorized := v1.Group("", auth.AuthenticateMiddleware())
+		authorized := v1.Group("", authSvc.AuthenticateMiddleware())
 		authorized.GET("/check-auth", apiHandler.CheckAuth)
 	}
 

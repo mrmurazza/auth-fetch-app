@@ -16,15 +16,17 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-var JwtSigningMethod = jwt.SigningMethodHS256
-var chars = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-type MyClaims struct {
-	jwt.RegisteredClaims
-	Data interface{} `json:"data"`
+type service struct {
+	JwtSigningMethod *jwt.SigningMethodHMAC
 }
 
-func AuthenticateMiddleware() gin.HandlerFunc {
+func InitAuthService() *service {
+	return &service{
+		JwtSigningMethod: jwt.SigningMethodHS256,
+	}
+}
+
+func (s *service) AuthenticateMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cfg := config.Get()
 		authorizationHeader := c.GetHeader("Authorization")
@@ -37,7 +39,7 @@ func AuthenticateMiddleware() gin.HandlerFunc {
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			if method, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("signing method invalid")
-			} else if method != JwtSigningMethod {
+			} else if method != s.JwtSigningMethod {
 				return nil, fmt.Errorf("signing method invalid")
 			}
 
@@ -62,7 +64,7 @@ func AuthenticateMiddleware() gin.HandlerFunc {
 	}
 }
 
-func GeneratePassword(length int) string {
+func (s *service) GeneratePassword(length int) string {
 	b := make([]rune, length)
 	for i := range b {
 		b[i] = chars[rand.Intn(len(chars))]
@@ -71,7 +73,7 @@ func GeneratePassword(length int) string {
 	return string(b)
 }
 
-func EncryptPassword(password string) string {
+func (s *service) EncryptPassword(password string) string {
 	md5pass := md5.Sum([]byte(password))
 	sha256pass := sha256.Sum256(md5pass[:])
 
@@ -79,7 +81,7 @@ func EncryptPassword(password string) string {
 	return str
 }
 
-func GetUserInfo(c *gin.Context) (map[string]interface{}, error) {
+func (s *service) GetUserInfo(c *gin.Context) (map[string]interface{}, error) {
 	userInfo, exist := c.Get("userInfo")
 	if !exist {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "userInfo from auth invalid"})
@@ -97,7 +99,7 @@ func GetUserInfo(c *gin.Context) (map[string]interface{}, error) {
 	return u, nil
 }
 
-func TokenizeData(data interface{}) (string, error) {
+func (s *service) TokenizeData(data interface{}) (string, error) {
 	cfg := config.Get()
 	claims := MyClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -108,7 +110,7 @@ func TokenizeData(data interface{}) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(
-		JwtSigningMethod,
+		s.JwtSigningMethod,
 		claims,
 	)
 

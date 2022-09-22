@@ -9,12 +9,14 @@ import (
 )
 
 type service struct {
-	repo user.Repository
+	repo    user.Repository
+	authSvc auth.Service
 }
 
-func NewService(repo user.Repository) user.Service {
+func NewService(repo user.Repository, authSvc auth.Service) user.Service {
 	return &service{
-		repo: repo,
+		repo:    repo,
+		authSvc: authSvc,
 	}
 }
 
@@ -35,11 +37,11 @@ func (s *service) CreateUserIfNotAny(req request.CreateUserRequest) (*user.User,
 		return nil, err
 	}
 
-	password := auth.GeneratePassword(4)
+	password := s.authSvc.GeneratePassword(4)
 	u := &user.User{
 		Phonenumber: req.Phonenumber,
 		Name:        req.Name,
-		Password:    auth.EncryptPassword(password),
+		Password:    s.authSvc.EncryptPassword(password),
 		Role:        role,
 	}
 
@@ -64,7 +66,7 @@ func (s *service) CreateUserIfNotAny(req request.CreateUserRequest) (*user.User,
 
 func (s *service) Login(phonenumber, password string) (*user.User, string, error) {
 
-	u, err := s.repo.GetUserByUserPass(phonenumber, auth.EncryptPassword(password))
+	u, err := s.repo.GetUserByUserPass(phonenumber, s.authSvc.EncryptPassword(password))
 	if u == nil {
 		return nil, "", nil
 	}
@@ -78,7 +80,7 @@ func (s *service) Login(phonenumber, password string) (*user.User, string, error
 		"role":        u.Role,
 		"timestamp":   u.CreatedAt.UTC().Unix(),
 	}
-	token, err := auth.TokenizeData(claims)
+	token, err := s.authSvc.TokenizeData(claims)
 	if err != nil {
 		return nil, "", err
 	}
